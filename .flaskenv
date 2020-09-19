@@ -1,0 +1,2 @@
+FLASK_APP=ekidata
+FLASK_ENV=development
