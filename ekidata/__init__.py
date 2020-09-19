@@ -16,6 +16,9 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
+    from ekidata.seed import bp as seed_bp
+    app.register_blueprint(seed_bp)
+
     return app
 
 from ekidata import models
