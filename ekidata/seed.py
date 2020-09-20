@@ -82,9 +82,15 @@ def station(csv_path):
 
     def _to_date(raw_date):
         if raw_date:
-            return datetime.datetime.strptime(raw_date, '%Y-%m-%d').date()
-        else:
-            return None
+            if raw_date != '0000-00-00':
+                return (
+                    datetime
+                    .datetime
+                    .strptime(raw_date, '%Y-%m-%d')
+                    .date()
+                )
+
+        return None
 
     with open(csv_path, 'r') as csv_file:
         reader = csv.DictReader(csv_file)
@@ -99,7 +105,7 @@ def station(csv_path):
                 line_id=row['line_cd'],
                 prefecture_id=row['pref_cd'],
                 post_code=row['post'],
-                address=row['add'],
+                address=row.get('add') or row.get('address'),
                 longitude=row['lon'],
                 latitude=row['lat'],
                 open_date=_to_date(row['open_ymd']),
