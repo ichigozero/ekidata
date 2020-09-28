@@ -92,9 +92,22 @@ def station(
             'close_date': _to_date(row['close_ymd']),
             'status': row['e_status'],
         }
+
+        # The station CSV file contains data where the stations name
+        # are same but the locations slightly off by a few decimal points.
+        base_longitude = int(row['lon'] * 100) / 100
+        base_latitude = int(row['lat'] * 100) / 100
+
         mongo.db.station.update_one(
             {
-                'location': [row['lon'], row['lat']],
+                'location.0': {
+                    '$gte': base_longitude,
+                    '$lt': base_longitude + 0.01
+                },
+                'location.1': {
+                    '$gte': base_latitude,
+                    '$lt': base_latitude + 0.01
+                },
                 'name.common': row['station_name'],
             },
             {
