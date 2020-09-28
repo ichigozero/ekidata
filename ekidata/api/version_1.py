@@ -1,17 +1,15 @@
-from flask import Blueprint
 from flask import abort
 from sqlalchemy.orm import aliased
 
 from ekidata import db
+from ekidata.api import bp
 from ekidata.models import ConnectingStation
 from ekidata.models import Line
 from ekidata.models import Station
 
-bp = Blueprint('routes', __name__)
-
 
 @bp.route(
-    '/ekidata/api/v1.0/prefectures/<int:prefecture_id>/lines',
+    '/v1.0/prefectures/<int:prefecture_id>/lines',
     methods=['GET']
 )
 def get_lines(prefecture_id):
@@ -50,7 +48,7 @@ def get_lines(prefecture_id):
 
 
 @bp.route(
-    '/ekidata/api/v1.0/lines/<int:line_id>/stations',
+    '/v1.0/lines/<int:line_id>/stations',
     methods=['GET']
 )
 def get_stations(line_id):
@@ -94,7 +92,7 @@ def get_stations(line_id):
 
 
 @bp.route(
-    '/ekidata/api/v1.0/stations/<int:station_id>/details',
+    '/v1.0/stations/<int:station_id>/details',
     methods=['GET']
 )
 def get_station_details(station_id):
@@ -141,7 +139,7 @@ def get_station_details(station_id):
 
 
 @bp.route(
-    '/ekidata/api/v1.0/station-groups/<int:station_group_id>',
+    '/v1.0/station-groups/<int:station_group_id>',
     methods=['GET']
 )
 def get_station_groups(station_group_id):
@@ -186,7 +184,7 @@ def get_station_groups(station_group_id):
 
 
 @bp.route(
-    '/ekidata/api/v1.0/lines/<int:line_id>/connecting-stations',
+    '/v1.0/lines/<int:line_id>/connecting-stations',
     methods=['GET']
 )
 def get_connecting_stations(line_id):

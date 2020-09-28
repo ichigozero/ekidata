@@ -3,6 +3,7 @@ import datetime
 
 import click
 from flask import Blueprint
+
 from ekidata.models import db
 from ekidata.models import Company
 from ekidata.models import ConnectingStation

@@ -9,3 +9,4 @@ class Config(object):
         or ''.join(['sqlite:///', os.path.join(basedir, 'ekidata.db')])
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    MONGO_URI = 'mongodb://localhost:27017/ekidata'

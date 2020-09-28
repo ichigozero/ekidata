@@ -1,10 +1,12 @@
 import datetime
 
 import pytest
+from pymongo import GEOSPHERE
 
 from config import Config
 from ekidata import create_app
 from ekidata import db
+from ekidata import mongo
 from ekidata.models import ConnectingStation
 from ekidata.models import Line
 from ekidata.models import Station
@@ -13,6 +15,7 @@ from ekidata.models import Station
 class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    MONGO_URI = 'mongodb://localhost:27017/ekidata-test'
 
 
 @pytest.fixture(scope='module')
@@ -152,3 +155,61 @@ def app_db(app):
 
     db.session.remove()
     db.drop_all()
+
+
+@pytest.fixture(scope='module')
+def app_mongodb(app):
+    stations = [
+        {
+            'name': {
+              'common': '麻布十番',
+              'kana': '',
+              'romaji': '',
+            },
+            'prefecture': '東京部',
+            'post_code': '106-0045',
+            'address': '港区麻布十番４-４-９',
+            'location': [139.737051, 35.654682],
+            'lines': ['東京メトロ南北線', '都営大江戸線'],
+            'open_date': None,
+            'close_date': None,
+            'status': 0,
+        },
+        {
+            'name': {
+              'common': '赤羽橋',
+              'kana': '',
+              'romaji': '',
+            },
+            'prefecture': '東京部',
+            'post_code': '106-0044',
+            'address': '港区東麻布１-２８-１３',
+            'location': [139.743642, 35.655007],
+            'lines': ['都営大江戸線'],
+            'open_date': None,
+            'close_date': None,
+            'status': 0,
+        },
+        {
+            'name': {
+              'common': '神谷町',
+              'kana': '',
+              'romaji': '',
+            },
+            'prefecture': '東京部',
+            'post_code': '105-0001',
+            'address': '港区虎ノ門５-１２-１１',
+            'location': [139.745069, 35.662978],
+            'lines': ['東京メトロ日比谷線'],
+            'open_date': None,
+            'close_date': None,
+            'status': 0,
+        },
+    ]
+
+    mongo.db.station.create_index([('location', GEOSPHERE)])
+    mongo.db.station.insert_many(stations)
+
+    yield mongo
+
+    mongo.db.command('dropDatabase')

@@ -2,7 +2,7 @@ from flask import url_for
 
 
 def test_get_line_api(client, app_db):
-    response = client.get(url_for('routes.get_lines', prefecture_id=13))
+    response = client.get(url_for('api.get_lines', prefecture_id=13))
 
     assert response.status_code == 200
 
@@ -21,7 +21,7 @@ def test_get_line_api(client, app_db):
 
 
 def test_get_stations_api(client, app_db):
-    response = client.get(url_for('routes.get_stations', line_id=11302))
+    response = client.get(url_for('api.get_stations', line_id=11302))
 
     assert response.status_code == 200
 
@@ -54,7 +54,7 @@ def test_get_stations_api(client, app_db):
 
 def test_get_station_details_api(client, app_db):
     response = client.get(
-        url_for('routes.get_station_details', station_id=1130220)
+        url_for('api.get_station_details', station_id=1130220)
     )
 
     assert response.status_code == 200
@@ -79,7 +79,7 @@ def test_get_station_details_api(client, app_db):
 
 def test_get_station_groups_api(client, app_db):
     response = client.get(
-        url_for('routes.get_station_groups', station_group_id=1130101)
+        url_for('api.get_station_groups', station_group_id=1130101)
     )
 
     assert response.status_code == 200
@@ -114,7 +114,7 @@ def test_get_station_groups_api(client, app_db):
 
 def test_get_connecting_stations_api(client, app_db):
     response = client.get(
-        url_for('routes.get_connecting_stations', line_id=11302)
+        url_for('api.get_connecting_stations', line_id=11302)
     )
 
     assert response.status_code == 200
