@@ -18,8 +18,8 @@ def create_app(class_config=Config):
     migrate.init_app(app, db)
     mongo.init_app(app)
 
-    from ekidata.routes import bp as routes_bp
-    app.register_blueprint(routes_bp)
+    from ekidata.api import bp as api_bp
+    app.register_blueprint(api_bp, url_prefix='/ekidata/api')
 
     from ekidata.seed import bp as seed_bp
     app.register_blueprint(seed_bp)

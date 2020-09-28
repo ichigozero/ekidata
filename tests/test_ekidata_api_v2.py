@@ -36,7 +36,7 @@ stations = [
 
 def test_get_stations_within_half_kilometers(client, app_mongodb):
     response = client.get(url_for(
-        'routes.get_nearest_stations',
+        'api.get_nearest_stations',
         longitude=139.74,
         latitude=35.655,
         max_distance=0.5
@@ -48,7 +48,7 @@ def test_get_stations_within_half_kilometers(client, app_mongodb):
 
 def test_get_stations_within_one_kilometer(client, app_mongodb):
     response = client.get(url_for(
-        'routes.get_nearest_stations',
+        'api.get_nearest_stations',
         longitude=139.74,
         latitude=35.655,
         max_distance=1.0

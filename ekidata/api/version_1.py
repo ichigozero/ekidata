@@ -1,18 +1,15 @@
-from flask import Blueprint
 from flask import abort
 from sqlalchemy.orm import aliased
 
 from ekidata import db
-from ekidata import mongo
+from ekidata.api import bp
 from ekidata.models import ConnectingStation
 from ekidata.models import Line
 from ekidata.models import Station
 
-bp = Blueprint('routes', __name__)
-
 
 @bp.route(
-    '/ekidata/api/v1.0/prefectures/<int:prefecture_id>/lines',
+    '/v1.0/prefectures/<int:prefecture_id>/lines',
     methods=['GET']
 )
 def get_lines(prefecture_id):
@@ -51,7 +48,7 @@ def get_lines(prefecture_id):
 
 
 @bp.route(
-    '/ekidata/api/v1.0/lines/<int:line_id>/stations',
+    '/v1.0/lines/<int:line_id>/stations',
     methods=['GET']
 )
 def get_stations(line_id):
@@ -95,7 +92,7 @@ def get_stations(line_id):
 
 
 @bp.route(
-    '/ekidata/api/v1.0/stations/<int:station_id>/details',
+    '/v1.0/stations/<int:station_id>/details',
     methods=['GET']
 )
 def get_station_details(station_id):
@@ -142,7 +139,7 @@ def get_station_details(station_id):
 
 
 @bp.route(
-    '/ekidata/api/v1.0/station-groups/<int:station_group_id>',
+    '/v1.0/station-groups/<int:station_group_id>',
     methods=['GET']
 )
 def get_station_groups(station_group_id):
@@ -187,7 +184,7 @@ def get_station_groups(station_group_id):
 
 
 @bp.route(
-    '/ekidata/api/v1.0/lines/<int:line_id>/connecting-stations',
+    '/v1.0/lines/<int:line_id>/connecting-stations',
     methods=['GET']
 )
 def get_connecting_stations(line_id):
@@ -246,55 +243,3 @@ def get_connecting_stations(line_id):
         connecting_stations.append(connecting_station)
 
     return {'connecting_stations': connecting_stations}
-
-
-@bp.route(
-    (
-        '/ekidata/api/v2.0'
-        '/longitude/<float:longitude>'
-        '/latitude/<float:latitude>'
-        '/max-distance/<float:max_distance>'
-        '/stations'
-    ),
-    methods=['GET']
-)
-def get_nearest_stations(longitude, latitude, max_distance):
-    documents = (
-        mongo.db.station
-        .aggregate([
-            {
-                '$geoNear': {
-                    'near': {'coordinates': [longitude, latitude]},
-                    'distanceField': 'distance',
-                    'spherical': True,
-                    'distanceMultiplier': 0.001,
-                    'maxDistance': max_distance * 1000,
-                },
-            },
-            {
-                '$match': {
-                    'status': 0,
-                },
-            }
-        ])
-    )
-
-    stations = []
-
-    for document in documents:
-        station = {
-            'common_name': document['name']['common'],
-            'lines': document['lines'],
-            'location': {
-                'longitude': document['location'][0],
-                'latitude': document['location'][1],
-            },
-            'distance': document['distance'],
-            'prefecture': document['prefecture'],
-        }
-        stations.append(station)
-
-    if not stations:
-        abort(404)
-
-    return {'stations': stations}
