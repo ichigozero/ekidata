@@ -27,6 +27,11 @@ def create_app(class_config=Config):
     from ekidata.seed_mongo import bp as seed_mongo_bp
     app.register_blueprint(seed_mongo_bp)
 
+    app.register_error_handler(404, not_found)
+
     return app
 
 from ekidata import models
+
+def not_found(error):
+    return {'error': 'Not found'}, 404
