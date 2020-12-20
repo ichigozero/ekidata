@@ -1,6 +1,25 @@
 from flask import url_for
 
 
+def test_get_prefectures(client, app_db):
+    response = client.get(url_for('api.get_prefectures'))
+
+    assert response.status_code == 200
+
+    prefectures = [
+        {
+            'id': 13,
+            'name': '東京都',
+        },
+        {
+            'id': 14,
+            'name': '神奈川県',
+        },
+    ]
+
+    assert response.json['prefectures'] == prefectures
+
+
 def test_get_line_api(client, app_db):
     response = client.get(url_for('api.get_lines', prefecture_id=13))
 

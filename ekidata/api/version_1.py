@@ -5,7 +5,33 @@ from ekidata import db
 from ekidata.api import bp
 from ekidata.models import ConnectingStation
 from ekidata.models import Line
+from ekidata.models import Prefecture
 from ekidata.models import Station
+
+
+@bp.route(
+    '/v1.0/prefectures',
+    methods=['GET']
+)
+def get_prefectures():
+    rows = db.session.query(
+        Prefecture.id,
+        Prefecture.name,
+    ).all()
+
+    if len(rows) == 0:
+        abort(404)
+
+    prefectures = []
+
+    for row in rows:
+        prefecture = {
+            'id': row.id,
+            'name': row.name
+        }
+        prefectures.append(prefecture)
+
+    return {'prefectures': prefectures}
 
 
 @bp.route(

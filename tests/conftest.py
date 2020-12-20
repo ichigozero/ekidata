@@ -9,6 +9,7 @@ from ekidata import db
 from ekidata import mongo
 from ekidata.models import ConnectingStation
 from ekidata.models import Line
+from ekidata.models import Prefecture
 from ekidata.models import Station
 
 
@@ -36,6 +37,14 @@ def client(app):
 def app_db(app):
     db.create_all()
 
+    prefecture_tokyo = Prefecture(
+        id=13,
+        name='東京都',
+    )
+    prefecture_kanagawa = Prefecture(
+        id=14,
+        name='神奈川県',
+    )
     line_keihin_tohoku = Line(
         id=11332,
         company_id=2,
@@ -141,6 +150,8 @@ def app_db(app):
     )
 
     db.session.add_all([
+        prefecture_tokyo,
+        prefecture_kanagawa,
         station_tokyo_1,
         station_tokyo_2,
         station_ueno,
