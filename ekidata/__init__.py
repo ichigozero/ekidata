@@ -11,12 +11,19 @@ mongo = PyMongo()
 
 
 def create_app(class_config=Config):
-    app = Flask(__name__)
+    app = Flask(
+        __name__,
+        static_folder='../../build',
+        static_url_path='/'
+    )
     app.config.from_object(class_config)
 
     db.init_app(app)
     migrate.init_app(app, db)
     mongo.init_app(app)
+
+    from ekidata.main import bp as main_bp
+    app.register_blueprint(main_bp)
 
     from ekidata.api import bp as api_bp
     app.register_blueprint(api_bp, url_prefix='/ekidata/api')
